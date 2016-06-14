@@ -1,5 +1,5 @@
 ---
-output: html_document
+output: pdf_document
 ---
 ##FACULTAD DE CIENCIAS FISICO MATEMATICAS
 ##LICENCIATURA EN ACTUARIA
@@ -20,70 +20,114 @@ $\bullet$ correr_analisis.R
 ###Explicacion de: "correr_analisis.R"
 1.- Veamos que dentro de la funcion hay una parte que dice lo siguiente:
 
-**features_name <- read.table(file_path("features.txt"))[,2]**
-  **colnames(data_set) <- features_name**
+
+
+**features <- read.table(filee("features.txt"))[,2]**
+  **colnames(datatot) <- features**
+
+
 
 Aqui lo unico que hace es extraer las medidas de la media, ademas de que
 
- **selected_measures <- grepl('-(mean|std)\\(',features_name)**
+
+
+  **prom <- grepl('-(mean|std)\\(',features)**
+  
+  
+  
+  
  
 tal linea de codigo es la encargada de buscar coincidencias entre argumentos o patrones y finalizamos actualizando estas medidas seleccionadas para que esten en "data_set"
 
- **data_set <- subset(data_set,select=selected_measures)**
-  **data_set[1:4,1:5]**
+
+
+ **datatot <- subset(datatot,select=prom)**
+
+  **datatot[1:4,1:5]**
   
 Siguiendo con esto, en el codigo se presenta lo siguiente:
 
-**colnames(data_set) <- gsub("mean", "Mean", colnames(data_set))**
+
+
+**colnames(datatot) <- gsub("mean", "Mean", colnames(datatot))**
   
-**colnames(data_set) <- gsub("std", "Std", colnames(data_set))**
+**colnames(datatot) <- gsub("std", "Std", colnames(datatot))**
   
-**colnames(data_set) <- gsub("^t", "Time", colnames(data_set))**
+**colnames(datatot) <- gsub("^t", "Time", colnames(datatot))**
  
-**colnames(data_set) <- gsub("^f", "Frequency", colnames(data_set))**
+**colnames(datatot) <- gsub("^f", "Frequency", colnames(datatot))**
 
-**colnames(data_set) <- gsub("\\(\\)", "", colnames(data_set))**
+**colnames(datatot) <- gsub("\\(\\)", "", colnames(datatot))**
   
-**colnames(data_set) <- gsub("-", "", colnames(data_set))**
+**colnames(datatot) <- gsub("-", "", colnames(datatot))**
  
-**colnames(data_set) <- gsub("BodyBody", "Body", colnames(data_set))**
+**colnames(datatot) <- gsub("BodyBody", "Body", colnames(datatot))**
 
-**colnames(data_set) <- gsub("^", "MeanOf", colnames(data_set))**
+**colnames(datatot) <- gsub("^", "MeanOf", colnames(datatot))**
   
-**colnames(data_set)**
+**colnames(datatot)**
 
-**data_set[1:4,1:5]**
+**datatot[1:4,1:5]**
+
+
 
 Lo que estamos haciendo es colocar las etiquetas necesarias a cada conjunto de datos, despues nombramos cada conjunto de datos:
 
-activities_train <- read.table(file_path("train/y_train.txt"))
-  activities_test <- read.table(file_path("test/y_test.txt"))
-  activities <- rbind(activities_train,activities_test)[,1]
-    labels <- c("WALKING", "WALKING_UPSTAIRS", "WALKING_DOWNSTAIRS",
-              "SITTING", "STANDING", "LAYING")
-  activities <- labels[activities]
-  data_set <- cbind(Activity = activities,data_set)
-  data_set[1:4,1:5]
+
+
+  **acttra <- read.table(filee("train/y_train.txt"))**
+  
+  **actte <- read.table(filee("test/y_test.txt"))**
+  
+  **activ <- rbind(acttra,actte)[,1]**
+  
+  **etiquetas <- c("WALKING", "WALKING_UPSTAIRS", "WALKING_DOWNSTAIRS",**
+  
+   **"SITTING", "STANDING", "LAYING")**
+   
+  **activ <- etiquetas[activ]**
+  
+  **datatot <- cbind(Activity = activ,datatot)**
+  
+  **datatot[1:4,1:5]**
+  
+  
   
 Nos vamos a interesamos en la dirección que nos lleva a cada uno de los voluntarios(30). Lo que hacemos es combinar filas y después actualizaremos "data_set" para que aparezcan los voluntarios como una columna.
 
- subjects_train <- read.table(file_path("train/subject_train.txt"))
-  subjects_test <- read.table(file_path("test/subject_test.txt"))
-  subjects <- rbind(subjects_train,subjects_test)[,1]
-  data_set <- cbind(Subject = subjects,data_set)
-  data_set[1:4,1:5]
+
+
+**sujetos_tra <- read.table(filee("train/subject_train.txt"))**
+
+**sujetos_te <- read.table(filee("test/subject_test.txt"))**
+
+**sujetos <- rbind(sujetos_tra,sujetos_te)[,1]**
+
+**datatot <- cbind(sujetos = sujetos,datatot)**
+
+**datatot[1:4,1:5]**
+
+
   
-Para concluir usaremos el paquete "dplyr" el cual nos ayudara a manipular todo lo que llevamos hasta ahora. Creamos una segunda base de datos en donde vendrán los promedios de cada variable dicha para cada actividad y cada voluntario en total.
+Para concluir usaremos el paquete "dplyr" el cual nos ayudara a manipular todo lo que llevamos hasta ahora. Creamos una segunda base de datos en donde vendran los promedios de cada variable dicha para cada actividad y cada voluntario en total.
 
 
-library('dplyr')
-  average_data_set <- data_set %>%
-    group_by(Subject,Activity) %>%
-    summarise_each(funs(mean))
-    
+
+
+**library('dplyr')**
+
+**prom_data <- datatot %>%**
+
+**group_by(sujetos,Activity) %>%**
+
+**summarise_each(funs(mean))**
+
+
 y creamos un archivo llamado: "conjunto de datos ordenados"
 
- write.table(average_data_set,row.name = FALSE,file = "conjunto_de_datos_ordenados")
+**write.table(prom_data,row.name = FALSE,file = "conjunto_de_datos_ordenados")**
+ 
+ 
 ---
 *Andrés Aram De la Calleja Macip 201303710*
 ---
